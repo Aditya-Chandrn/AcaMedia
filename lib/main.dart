@@ -122,6 +122,37 @@ class _myContainerState extends State<myContainer> {
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 90, left: 60),
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blueGrey,
+                fixedSize: Size(350, 75)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 3),
+                        child: Icon(Icons.circle_outlined),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 3),
+                        child: Text('Cheeku'),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.only(top: 7, left: 3),
+                    child: Text("Hello Ma'am, I have a doubt.                             19:05"),)
+                ],),
+              ),
+            ),
+            ),
         ],
       ),
     );
