@@ -1,10 +1,27 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:acamedia/shared/constants.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:acamedia/calls.dart';
-import 'package:acamedia/dms.dart';
+import 'package:acamedia/pages/calls.dart';
+import 'package:acamedia/pages/dms.dart';
+import 'package:acamedia/pages/home.dart';
+import 'package:flutter/foundation.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: FirebaseOptions(
+            apiKey: Constants.apiKey,
+            appId: Constants.appId,
+            messagingSenderId: Constants.messagingSenderId,
+            projectId: Constants.projectId));
+  } else {
+    await Firebase.initializeApp();
+  }
+
   runApp(const MyApp());
 }
 
@@ -156,94 +173,95 @@ class MyApp extends StatelessWidget {
 //   }
 // }
 
-class homePage extends StatelessWidget {
-  const homePage({super.key});
+// class homePage extends StatelessWidget {
+//   const homePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        // bottom: PreferredSize(child: SizedBox(height: 20), preferredSize: Size.fromHeight(25),),
-        // title: Text('Title'),
-        actions: [
-          // IconButton(
-          //     onPressed: () {},
-          //     icon: Icon(
-          //       Icons.logo_dev_outlined,
-          //       color: Colors.white,
-          //     )),
-          ElevatedButton(onPressed: (){},
-            style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 32, 32, 32),
-              minimumSize: Size(60, 50),
-            ),
-          child: Icon(Icons.logo_dev)),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 32, 32, 32),
-              minimumSize: Size(175, 50),
-            ),
-            child: Text('Chats'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => callPage()));
-            },
-            style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 32, 32, 32),
-                minimumSize: Size(175, 50)),
-            // side: BorderSide(width: 3, color: Colors.blue)),
-            child: Text('Calls'),
-          ),
-        ],
-        backgroundColor: Color.fromARGB(255, 32, 32, 32),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: Color.fromARGB(255, 32, 32, 32),
-            // child: myContainer(),
-          ),
-          Container(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => DMpage()));
-              },
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.blueGrey, fixedSize: Size(412, 75)),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Icon(Icons.circle_outlined),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Text('Cheeku'),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.only(top: 7, left: 3),
-                      child: Text(
-                          "Hello Ma'am, I have a doubt.                                               19:05"),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         automaticallyImplyLeading: false,
+//         // bottom: PreferredSize(child: SizedBox(height: 20), preferredSize: Size.fromHeight(25),),
+//         // title: Text('Title'),
+//         actions: [
+//           // IconButton(
+//           //     onPressed: () {},
+//           //     icon: Icon(
+//           //       Icons.logo_dev_outlined,
+//           //       color: Colors.white,
+//           //     )),
+//           ElevatedButton(
+//               onPressed: () {},
+//               style: ElevatedButton.styleFrom(
+//                 primary: Color.fromARGB(255, 32, 32, 32),
+//                 minimumSize: Size(60, 50),
+//               ),
+//               child: Icon(Icons.logo_dev)),
+//           ElevatedButton(
+//             onPressed: () {},
+//             style: ElevatedButton.styleFrom(
+//               primary: Color.fromARGB(255, 32, 32, 32),
+//               minimumSize: Size(175, 50),
+//             ),
+//             child: Text('Chats'),
+//           ),
+//           ElevatedButton(
+//             onPressed: () {
+//               Navigator.push(
+//                   context, MaterialPageRoute(builder: (context) => callPage()));
+//             },
+//             style: ElevatedButton.styleFrom(
+//                 primary: Color.fromARGB(255, 32, 32, 32),
+//                 minimumSize: Size(175, 50)),
+//             // side: BorderSide(width: 3, color: Colors.blue)),
+//             child: Text('Calls'),
+//           ),
+//         ],
+//         backgroundColor: Color.fromARGB(255, 32, 32, 32),
+//       ),
+//       body: Column(
+//         children: [
+//           Container(
+//             color: Color.fromARGB(255, 32, 32, 32),
+//             // child: myContainer(),
+//           ),
+//           Container(
+//             child: ElevatedButton(
+//               onPressed: () {
+//                 Navigator.push(
+//                     context, MaterialPageRoute(builder: (context) => DMpage()));
+//               },
+//               style: ElevatedButton.styleFrom(
+//                   primary: Colors.blueGrey, fixedSize: Size(412, 75)),
+//               child: Padding(
+//                 padding: const EdgeInsets.only(top: 10),
+//                 child: Column(
+//                   children: [
+//                     Row(
+//                       children: [
+//                         Container(
+//                           padding: const EdgeInsets.only(left: 3),
+//                           child: Icon(Icons.circle_outlined),
+//                         ),
+//                         Container(
+//                           padding: const EdgeInsets.only(left: 3),
+//                           child: Text('Cheeku'),
+//                         ),
+//                       ],
+//                     ),
+//                     Container(
+//                       alignment: Alignment.topLeft,
+//                       padding: const EdgeInsets.only(top: 7, left: 3),
+//                       child: Text(
+//                           "Hello Ma'am, I have a doubt.                                               19:05"),
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
