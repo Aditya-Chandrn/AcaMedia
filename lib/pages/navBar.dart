@@ -33,12 +33,12 @@ class navBar extends StatelessWidget {
               decoration: BoxDecoration(color: Color.fromARGB(255, 32, 32, 32),),
               ),
             ),
-        ListTile(
-          leading: Icon(Icons.account_circle_sharp),
-          title: Text("Profile",
-          style: TextStyle(fontSize: 20)),
-          onTap: () => {},
-        ),
+        // ListTile(
+        //   leading: Icon(Icons.account_circle_sharp),
+        //   title: Text("Profile",
+        //   style: TextStyle(fontSize: 20)),
+        //   onTap: () => {},
+        // ),
         ListTile(
           leading: Icon(Icons.search),
           title: Text("Search",
@@ -58,8 +58,14 @@ class navBar extends StatelessWidget {
           onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => callPage(),))},
         ),
         ListTile(
-          leading: Icon(Icons.notifications_outlined),
-          title: Text("Notifications",
+          leading: Icon(Icons.settings),
+          title: Text("Settings",
+          style: TextStyle(fontSize: 20)),
+          onTap: () => {},
+        ),
+        ListTile(
+          leading: Icon(Icons.exit_to_app_outlined),
+          title: Text("Exit",
           style: TextStyle(fontSize: 20)),
           onTap: () => {},
         ),

@@ -1,11 +1,17 @@
+import 'package:acamedia/pages/dms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'navBar.dart';
 
-class homePage  extends StatelessWidget {
+class homePage  extends StatefulWidget {
   const homePage ({super.key});
 
+  @override
+  State<homePage> createState() => _homePageState();
+}
+
+class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +37,9 @@ class homePage  extends StatelessWidget {
           ),
           Container(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) => DMpage()),));
+              },
               style: ElevatedButton.styleFrom(
                   primary: Colors.blueGrey, fixedSize: Size(412, 75)),
               child: Padding(
