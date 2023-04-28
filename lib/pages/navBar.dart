@@ -49,6 +49,8 @@ class navBar extends StatelessWidget {
           leading: Icon(Icons.chat_bubble_sharp),
           title: Text("Chats",
           style: TextStyle(fontSize: 20)),
+          selected: true,
+          selectedColor: Colors.blue,
           onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => homePage()))},
         ),
         ListTile(

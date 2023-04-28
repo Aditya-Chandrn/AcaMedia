@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:acamedia/pages/dms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
