@@ -1,6 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:acamedia/helper/helper_functions.dart';
+import 'package:acamedia/pages/auth/register.dart';
 import 'package:acamedia/pages/home.dart';
+import 'package:acamedia/service/auth_ser.dart';
+import 'package:acamedia/service/db_ser.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -17,7 +23,10 @@ class loginPage extends StatefulWidget {
 class _loginPageState extends State<loginPage> {
   final formKey = GlobalKey<FormState>();
   String email = "";
+  String name = "";
   String password = "";
+  bool _isLoading = false;
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,33 +34,36 @@ class _loginPageState extends State<loginPage> {
         backgroundColor: Colors.black,
         elevation: 0,
       ),
-      body: Column(
+      body: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(color: Colors.blueGrey))
+                : Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 25),
             child: SingleChildScrollView(
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      "assets/Icon Comps.png",
-                      width: 30,
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 9.0),
-                      child: Text(
-                        "AcaMedia",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/Icon Comps.png",
+                            width: 30,
+                            height: 30,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 9.0),
+                            child: Text(
+                              "AcaMedia",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
           Text(
             "Login to join other students and teachers.",
@@ -108,6 +120,7 @@ class _loginPageState extends State<loginPage> {
                                     Icons.lock,
                                     color: Colors.white,
                                   )),
+                              style: TextStyle(color: Colors.white),
                               onChanged: (val) {
                                 password = val;
                               },
@@ -129,14 +142,39 @@ class _loginPageState extends State<loginPage> {
                                   login();
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))
-                                ) ,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18))),
                                 icon: Icon(Icons.login),
                                 label: Text(
                                   "Login",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 25,fontWeight: FontWeight.w300),
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w300),
+                                )),
+                          ),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            width: 160,
+                            height: 50,
+                            child: ElevatedButton.icon(
+                                onPressed: () {
+                                  nextPage(context, registerPage());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18))),
+                                icon: Icon(Icons.login),
+                                label: Text(
+                                  "Register",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w300),
                                 )),
                           ),
                         ],
@@ -151,7 +189,27 @@ class _loginPageState extends State<loginPage> {
     );
   }
 
-  login() {
-    if (formKey.currentState!.validate()) {}
+  login() async {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService.loginUser(email, password).then((value) async {
+        if (value == true) {
+          QuerySnapshot snapshot =
+              await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .getData(email);
+          await helperFunctions.saveLoginStatus(true);
+          await helperFunctions.saveEmailSF(email);
+          // await helperFunctions.saveUserNameSF(snapshot.docs[0]['name']);
+          nextPageReplace(context, homePage());
+        } else {
+          showSnackBar(context, Colors.red, value);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    }
   }
 }

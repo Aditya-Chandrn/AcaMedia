@@ -1,19 +1,23 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:acamedia/pages/auth/register.dart';
 import 'package:acamedia/pages/dms.dart';
+import 'package:acamedia/service/auth_ser.dart';
+import 'package:acamedia/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'navBar.dart';
 
-class homePage  extends StatefulWidget {
-  const homePage ({super.key});
+class homePage extends StatefulWidget {
+  const homePage({super.key});
 
   @override
   State<homePage> createState() => _homePageState();
 }
 
 class _homePageState extends State<homePage> {
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class _homePageState extends State<homePage> {
         // ],
         backgroundColor: Color.fromARGB(255, 32, 32, 32),
       ),
-      body:Column(
+      body: Column(
         children: [
           Container(
             color: Color.fromARGB(255, 32, 32, 32),
@@ -40,7 +44,9 @@ class _homePageState extends State<homePage> {
           Container(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: ((context) => DMpage()),));
+                // Navigator.push(context, MaterialPageRoute(builder: ((context) => DMpage()),));
+                authService.signOut();
+                nextPage(context, registerPage());
               },
               style: ElevatedButton.styleFrom(
                   primary: Colors.blueGrey, fixedSize: Size(412, 75)),

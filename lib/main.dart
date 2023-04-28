@@ -2,6 +2,7 @@
 
 import 'package:acamedia/helper/helper_functions.dart';
 import 'package:acamedia/pages/auth/login.dart';
+import 'package:acamedia/pages/auth/register.dart';
 import 'package:acamedia/pages/home.dart';
 import 'package:acamedia/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,7 +44,10 @@ class _MyAppState extends State<MyApp> {
   getUserStatus() async {
     await helperFunctions.getUserStatus().then((value) {
       if (value != null) {
+        setState(() {
         _isLoggedIn = value;
+          
+        });
       }
     });
   }
