@@ -20,7 +20,7 @@ class DatabaseService {
 
   Future getData(String email) async {
     QuerySnapshot snapshot =
-        await userCollection.where("email", isEqualTo: email).get();
+        await userCollection.where("Email", isEqualTo: email).get();
     return snapshot;
   }
 }

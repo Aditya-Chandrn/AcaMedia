@@ -20,8 +20,18 @@ class helperFunctions {
     return await sf.setString(userEmailKey, userEmail);
   }
 
-  static Future<bool?> getUserStatus() async {
+  static Future<bool?> getUserStatusSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getBool(userLoggedInKey);
+  }
+
+  static Future<String?> getUserNameSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userNameKey);
+  }
+
+  static Future<String?> getUserEmailSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userEmailKey);
   }
 }
