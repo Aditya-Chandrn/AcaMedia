@@ -4,6 +4,12 @@ class helperFunctions {
   static String userLoggedInKey = "loggedinKey";
   static String userNameKey = "usernameKey";
   static String userEmailKey = "emailKey";
+  static String userIDKey="userIDKey";
+
+  static Future<bool> saveUserIDSF(String userID) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userIDKey, userID);
+  }
 
   static Future<bool> saveLoginStatus(bool loginStatus) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
