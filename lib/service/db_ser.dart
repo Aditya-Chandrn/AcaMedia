@@ -11,17 +11,18 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("chats");
 
   Future updateData(String name, String email) async {
-    return await userCollection.doc(uid).set({
-      "Name": name,
-      "Email": email,
-      "Chats": [],
-      "UId": uid
-    });
+    return await userCollection
+        .doc(uid)
+        .set({"Name": name, "Email": email, "Chats": [], "UId": uid});
   }
 
   Future getData(String email) async {
     QuerySnapshot snapshot =
         await userCollection.where("Email", isEqualTo: email).get();
     return snapshot;
+  }
+
+  getUserChats() async {
+    return userCollection.doc(uid).snapshots();
   }
 }
