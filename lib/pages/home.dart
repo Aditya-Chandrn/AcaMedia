@@ -1,11 +1,13 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, camel_case_types
 
 import 'package:acamedia/helper/helper_functions.dart';
 import 'package:acamedia/pages/auth/login.dart';
-import 'package:acamedia/pages/dms.dart';
 import 'package:acamedia/pages/search.dart';
+import 'package:acamedia/pages/settings_page.dart';
 import 'package:acamedia/service/auth_ser.dart';
+import 'package:acamedia/service/db_ser.dart';
 import 'package:acamedia/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'calls.dart';
 
@@ -18,6 +20,7 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   AuthService authService = AuthService();
+  Stream? chats;
   String userName = "";
   String userEmail = "";
 
@@ -33,6 +36,14 @@ class _homePageState extends State<homePage> {
     });
     await helperFunctions.getUserNameSF().then((val) {
       userName = val!;
+    });
+
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getUserChats()
+        .then((snapshot) {
+      setState(() {
+        chats = snapshot;
+      });
     });
   }
 
@@ -53,15 +64,15 @@ class _homePageState extends State<homePage> {
                   userEmail,
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
-                currentAccountPicture: CircleAvatar(
-                  child: ClipOval(
-                      child: Image.network(
-                    "https://helios-i.mashable.com/imagery/articles/00apgKgIAO4EnFfjOgCApRe/hero-image.fill.size_1248x702.v1619086604.jpg",
-                    fit: BoxFit.cover,
-                    width: 80,
-                    height: 80,
-                  )),
-                ),
+                // currentAccountPicture: CircleAvatar(
+                //   child: ClipOval(
+                //       child: Image.network(
+                //     "https://helios-i.mashable.com/imagery/articles/00apgKgIAO4EnFfjOgCApRe/hero-image.fill.size_1248x702.v1619086604.jpg",
+                //     fit: BoxFit.cover,
+                //     width: 80,
+                //     height: 80,
+                //   )),
+                // ),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 32, 32, 32),
                 ),
@@ -69,9 +80,10 @@ class _homePageState extends State<homePage> {
             ),
             ListTile(
               leading: Icon(Icons.chat_bubble_sharp),
-              title: Text("Chats", style: TextStyle(fontSize: 20)),
+              title: Text("Chats",
+                  style: TextStyle(color: Colors.black, fontSize: 15)),
               selected: true,
-              selectedColor: Colors.blue,
+              selectedColor: Colors.black,
               onTap: () => {
                 // nextPageReplace(context, homePage())
                 Navigator.pop(context)
@@ -79,7 +91,8 @@ class _homePageState extends State<homePage> {
             ),
             ListTile(
               leading: Icon(Icons.call),
-              title: Text("Calls", style: TextStyle(fontSize: 20)),
+              title: Text("Calls",
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 15)),
               onTap: () => {
                 Navigator.push(
                     context,
@@ -90,12 +103,14 @@ class _homePageState extends State<homePage> {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text("Settings", style: TextStyle(fontSize: 20)),
-              onTap: () => {},
+              title: Text("Settings",
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 15)),
+              onTap: () => {nextPage(context, settingsPage())},
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text("Logout", style: TextStyle(fontSize: 20)),
+              title: Text("Logout",
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 15)),
               onTap: () async {
                 showDialog(
                     barrierDismissible: true,
@@ -136,64 +151,47 @@ class _homePageState extends State<homePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Chats"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                nextPage(context, searchPage());
-              },
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              )),
-        ],
         backgroundColor: Color.fromARGB(255, 32, 32, 32),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Color.fromARGB(255, 32, 32, 32),
-          ),
-          Container(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: ((context) => DMpage()),
-                    ));
-              },
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.blueGrey, fixedSize: Size(412, 75)),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Icon(Icons.circle_outlined),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Text('Cheeku'),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.only(top: 7, left: 3),
-                      child: Text(
-                          "Hello Ma'am, I have a doubt.                                               19:05"),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
+      body: chatList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          popupDialog(context);
+        },
+        elevation: 0,
+        backgroundColor: Colors.black,
+        child: Icon(Icons.search, color: Colors.white, size: 30),
       ),
     );
-    ;
+  }
+
+  popupDialog(BuildContext context) {}
+  chatList() {
+    return StreamBuilder(
+      stream: chats,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data['Chats'] != null) {
+            if (snapshot.data['Chats'].length != 0) {
+              return Text("Hello");
+            } else {
+              return noChatWidget();
+            }
+          } else {
+            return noChatWidget();
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.black,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  noChatWidget() {
+    return Text("NO CHATS");
   }
 }
